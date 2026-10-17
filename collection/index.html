@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>The collection - Museum of the Future</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500&family=Schibsted+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/site.css">
+<link rel="stylesheet" href="../css/gallery.css">
+</head>
+<body>
+
+<div id="site">
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../">Museum of the Future</a>
+    <nav class="nav" aria-label="Main">
+      <a href="../index.html#visit">Visit</a><a href="./">Collection</a><a href="../about/">About</a>
+      <button class="btn btn-primary btn-sm" type="button" data-3d="">Enter 3D</button>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<section class="sec" id="collection">
+  <div class="wrap">
+    <p class="mono sec-label">On display</p>
+    <div class="sec-body">
+      <h2>The collection</h2>
+      <p class="lead">Eight placeholder objects in four wings. Select a frame to read its label.</p>
+      <div class="chips" id="chips" role="group" aria-label="Filter by wing"></div>
+      <div id="wings"></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>I imagine we can put a copyright here</span>
+    <span>everything is a placeholder istg please don't judge it based on the placeholders</span>
+  </div>
+</footer>
+</div>
+
+<div class="modal" id="placard" role="dialog" aria-modal="true" aria-labelledby="pl-title" hidden>
+  <div class="modal-card">
+    <div class="frame"><div class="mat"><canvas id="pl-canvas" width="480" height="600" aria-hidden="true"></canvas></div></div>
+    <div>
+      <p class="mono" id="pl-cat"></p>
+      <h3 id="pl-title" style="margin-block:.5rem .8rem;font-size:1.7rem;font-weight:700;letter-spacing:-.025em"></h3>
+      <p id="pl-text"></p>
+      <dl><dt>Wing</dt><dd id="pl-wing"></dd><dt>Era</dt><dd id="pl-year"></dd><dt>Stewarded by</dt><dd id="pl-by"></dd></dl>
+      <div class="btn-row" style="margin-top:1.4rem"><button class="btn btn-primary" type="button" id="pl-close">Close</button></div>
+    </div>
+  </div>
+</div>
+
+<div id="gallery3d" hidden role="dialog" aria-modal="true" aria-label="3D gallery">
+  <div id="gl-host"></div>
+  <div class="hud">
+    <div class="hud-top">
+      <button class="hud-btn" id="gl-exit" type="button">&larr; Exit to site</button>
+      <div class="hud-right">
+        <label class="sr" for="hud-q">Quality</label>
+        <select id="hud-q" class="hud-btn"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select>
+        <button class="hud-btn" id="gl-stats-btn" type="button" aria-pressed="false">Stats</button>
+      </div>
+    </div>
+    <div class="hud-pill" id="gl-room" role="status" aria-live="polite"></div>
+    <canvas id="gl-map" width="124" height="124" aria-hidden="true"></canvas>
+    <div class="hud-stats" id="gl-stats" hidden></div>
+    <div class="cross" aria-hidden="true"></div>
+    <button class="hud-read" id="gl-read" type="button" hidden></button>
+    <div id="joy" aria-hidden="true"><div id="knob"></div></div>
+    <p class="hud-help"><span class="m">WASD or arrows to walk, mouse to look, E to read.</span></p>
+  </div>
+  <div class="gl-load" id="gl-load">
+    <div class="box">
+      <h2 id="gl-title">Opening the gallery</h2>
+      <p id="gl-msg">Loading the 3D library.</p>
+      <button class="btn btn-primary" type="button" id="gl-go" hidden>Start walking</button>
+      <button class="btn btn-ghost" type="button" id="gl-back" hidden>Back to the site</button>
+    </div>
+  </div>
+</div>
+
+<!-- tiny DOM + environment helpers -->
+<script src="../src/util.js"></script>
+<!-- shared state -->
+<script src="../src/state.js"></script>
+<!-- the wings and the objects -->
+<script src="../src/data.js"></script>
+<!-- procedural paintings -->
+<script src="../src/art.js"></script>
+<!-- the flat collection page -->
+<script src="../src/collection.js"></script>
+<!-- wall-label dialog -->
+<script src="../src/placard.js"></script>
+<!-- device check + quality presets -->
+<script src="../src/quality.js"></script>
+<!-- on-demand three.js loader -->
+<script src="../src/load-three.js"></script>
+<!-- the 3D gallery -->
+<script src="../src/world.js"></script>
+<!-- open/close the 3D gallery -->
+<script src="../src/gallery.js"></script>
+<!-- click wiring -->
+<script src="../src/main.js"></script>
+</body>
+</html>
