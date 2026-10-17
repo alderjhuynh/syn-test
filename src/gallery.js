@@ -14,6 +14,8 @@ function enter3D(id){
   opener=document.activeElement;overlay.hidden=false;$('#site').inert=true;document.documentElement.style.overflow='hidden';
   setLoad('Opening the gallery','Loading the 3D library.',false,false);
   loadThree().then(function(){
+    return loadFBXSupport().catch(function(){});
+  }).then(function(){
     setLoad('Opening the gallery','Building the rooms.',false,false);
     return fontsReady();
   }).then(function(){return new Promise(function(r){requestAnimationFrame(function(){setTimeout(r,30)})})})

@@ -10,6 +10,7 @@ function wrapText(x,text,px,py,maxW,lh,align){
   x.fillText(line,px,py);return py;
 }
 
+var MODEL_HEIGHT=2.2,MODEL_Y=.8;
 function startWorld(qk,pose){
   var T=window.THREE,Q=QUALITY[qk],host=$('#gl-host');
   var renderer=new T.WebGLRenderer({antialias:Q.aa,powerPreference:'high-performance'});
@@ -38,9 +39,9 @@ function startWorld(qk,pose){
     scene.add(r.group);rooms.push(r);byId[id]=r;return r;
   }
   function add(room,mesh){mesh.matrixAutoUpdate=false;mesh.updateMatrix();room.group.add(mesh);return mesh}
-  function wallBox(room,ax,az,bx,bz){
+  function wallBox(room,ax,az,bx,bz,noCollide){
     var h=.2,x0=Math.min(ax,bx)-h,x1=Math.max(ax,bx)+h,z0=Math.min(az,bz)-h,z1=Math.max(az,bz)+h;
-    walls.push({x0:x0,x1:x1,z0:z0,z1:z1});
+    if(!noCollide)walls.push({x0:x0,x1:x1,z0:z0,z1:z1});
     var m=new T.Mesh(new T.BoxGeometry(x1-x0,5,z1-z0),room.wallMat);m.position.set((x0+x1)/2,2.5,(z0+z1)/2);add(room,m);
   }
   function plane(room,w,h,map,x,y,z,yaw,opts){
@@ -67,7 +68,7 @@ function startWorld(qk,pose){
     var room=mkRoom(w.id,w.name,Math.min(a.x,b.x),Math.min(a.z,b.z),Math.max(a.x,b.x),Math.max(a.z,b.z),w.wall,FLOOR);
     room.doors=[d.x===1?'x0':d.x===-1?'x1':d.z===1?'z0':'z1'];
     var p0=toW(.4,-8),p1=toW(18,-8),p2=toW(.4,8),p3=toW(18,8);
-    wallBox(room,p0.x,p0.z,p1.x,p1.z);wallBox(room,p2.x,p2.z,p3.x,p3.z);wallBox(room,p1.x,p1.z,p3.x,p3.z);
+    wallBox(room,p0.x,p0.z,p1.x,p1.z);wallBox(room,p2.x,p2.z,p3.x,p3.z);wallBox(room,p1.x,p1.z,p3.x,p3.z,w.id==='south'); // south far wall: visible but no collision (secret passage to the hidden room)
     var inward=Math.atan2(-d.x,-d.z);
 
     // door lintel and sign (in the atrium)
@@ -115,6 +116,33 @@ function startWorld(qk,pose){
     room.group.add(sc);spin.push({m:sc,s:.6});
     room.pools.push({x:pc.x,z:pc.z,r:3.2,a:.55});
   });
+
+  // hidden room, reached by walking through the far wall of the south wing (that wall has no collision)
+  var HID={x0:-8,z0:28,x1:8,z1:40};
+  var H=mkRoom('hidden','Hidden Room',HID.x0,HID.z0,HID.x1,HID.z1,'#eee9f3',FLOOR);
+  H.doors=[];
+  wallBox(H,HID.x0,HID.z0,HID.x0,HID.z1);wallBox(H,HID.x1,HID.z0,HID.x1,HID.z1);wallBox(H,HID.x0,HID.z1,HID.x1,HID.z1);
+  var HC={x:(HID.x0+HID.x1)/2,z:(HID.z0+HID.z1)/2};
+  H.pools.push({x:HC.x,z:HC.z,r:6,a:.6});
+  var hGroup=new T.Group();hGroup.position.set(HC.x,0,HC.z);H.group.add(hGroup);
+  var stopped=false;
+  if(T.FBXLoader){
+    new T.FBXLoader().load('assets/shork/Shork.fbx',function(obj){
+      if(stopped)return;
+      // flat unlit materials, like the rest of the museum
+      // (the FBX's Corona material has no map three.js understands, so load the base colour texture directly)
+      var skin=new T.TextureLoader().load('assets/shork/Shork_BaseColor.jpg');skin.anisotropy=maxAniso;
+      obj.traverse(function(o){if(!o.isMesh)return;
+        var n=[].concat(o.material).length;
+        o.material=n>1?[].concat(o.material).map(function(){return new T.MeshBasicMaterial({map:skin,side:T.DoubleSide})}):new T.MeshBasicMaterial({map:skin,side:T.DoubleSide})});
+      // normalise size, centre it on the pivot so it spins in place, and stand it on the floor
+      var box=new T.Box3().setFromObject(obj),size=box.getSize(new T.Vector3()),ctr=box.getCenter(new T.Vector3());
+      var k=MODEL_HEIGHT/Math.max(size.x,size.y,size.z);
+      var holder=new T.Group();obj.position.set(-ctr.x,-box.min.y,-ctr.z);holder.add(obj);holder.scale.setScalar(k);
+      var pivot=new T.Group();pivot.position.y=MODEL_Y;pivot.add(holder);hGroup.add(pivot);
+      spin.push({m:pivot,s:.8});
+    },undefined,function(){});
+  }
 
   // atrium centrepiece and wall text
   var orb=new T.Group();orb.position.set(0,1.9,0);A.group.add(orb);
@@ -228,7 +256,7 @@ function startWorld(qk,pose){
   $('#gl-stats-btn').onclick=toggleStats;
   function drawMap(){
     mm.clearRect(0,0,124,124);mm.save();mm.translate(62,62);var s=124/62;mm.scale(s,s);
-    rooms.forEach(function(r){mm.fillStyle=r.id===cur?'rgba(255,255,255,.6)':'rgba(255,255,255,.26)';mm.fillRect(r.x0,r.z0,r.x1-r.x0,r.z1-r.z0)});
+    rooms.forEach(function(r){if(r.id==='hidden'&&cur!=='hidden')return;mm.fillStyle=r.id===cur?'rgba(255,255,255,.6)':'rgba(255,255,255,.26)';mm.fillRect(r.x0,r.z0,r.x1-r.x0,r.z1-r.z0)});
     mm.fillStyle='#e6e8eb';paints.forEach(function(p){mm.fillRect(p.x-.7,p.z-.7,1.4,1.4)});
     mm.translate(P.x,P.z);mm.rotate(Math.atan2(-Math.cos(P.yaw),-Math.sin(P.yaw)));
     mm.fillStyle='#ffb24a';mm.beginPath();mm.moveTo(2.4,0);mm.lineTo(-1.6,1.6);mm.lineTo(-1.6,-1.6);mm.closePath();mm.fill();mm.restore();
@@ -247,7 +275,7 @@ function startWorld(qk,pose){
       if(!reduceMotion)spin.forEach(function(s){s.m.rotation.y+=s.s*dt});
       cur=roomAt(P.x,P.z);
       if(cur!==lastCur){lastCur=cur;roomPill.textContent=byId[cur].name;roomPill.classList.add('on');clearTimeout(pillT);pillT=setTimeout(function(){roomPill.classList.remove('on')},2400);
-        rooms.forEach(function(r){r.group.visible=(r.id===cur||cur==='atrium'||r.id==='atrium')})}
+        rooms.forEach(function(r){r.group.visible=(r.id===cur||cur==='atrium'||r.id==='atrium'||(cur==='hidden'&&r.id==='south')||(cur==='south'&&r.id==='hidden'))})}
       var best=null,bd=1e9;
       paints.forEach(function(p){
         if(!byId[p.room].group.visible)return;
@@ -275,7 +303,7 @@ function startWorld(qk,pose){
     pause:function(v){paused=v;if(v){keys={};joyV.x=0;joyV.y=0;look.id=null}last=performance.now()},
     pose:function(){return {x:P.x,z:P.z,yaw:P.yaw,pitch:P.pitch}},
     stop:function(){
-      cancelAnimationFrame(raf);cleanup.forEach(function(f){f()});
+      stopped=true;cancelAnimationFrame(raf);cleanup.forEach(function(f){f()});
       scene.traverse(function(o){if(o.geometry)o.geometry.dispose();var ms=[].concat(o.material||[]);ms.forEach(function(m){if(m.map)m.map.dispose();m.dispose()})});
       renderer.dispose();try{renderer.forceContextLoss()}catch(e){}
       if(canvas.parentNode)canvas.parentNode.removeChild(canvas);
