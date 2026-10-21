@@ -157,11 +157,6 @@
 
   function render() {
     if (!box) return;
-    var s = byId(current);
-    toggle.querySelector('b').textContent = s.name + (mode === 'auto' ? '' : ' \u00b7 ' + mode);
-    var badge = toggle.querySelector('.tsw-e');
-    badge.textContent = current === 'default' ? 'Base' : (style === 'minimal' ? 'Min' : 'Max');
-    badge.title = current === 'default' ? 'Original has no style variant' : (style === 'minimal' ? 'Happy medium' : 'Current skins');
     var ss = list.querySelectorAll('.tsw-s button');
     for (var k = 0; k < ss.length; k++) ss[k].setAttribute('aria-pressed', ss[k].getAttribute('data-style') === style ? 'true' : 'false');
     var ms = list.querySelectorAll('.tsw-m button');
@@ -183,7 +178,7 @@
     box.setAttribute('role', 'region'); box.setAttribute('aria-label', 'Theme switcher');
     toggle = document.createElement('button'); toggle.type = 'button'; toggle.className = 'tsw-t';
     toggle.setAttribute('aria-expanded', 'false'); toggle.setAttribute('aria-controls', 'tsw-list');
-    toggle.innerHTML = '<span class="tsw-k">theme</span></span>';
+    toggle.innerHTML = '<span class="tsw-k">theme</span>';
     list = document.createElement('div'); list.className = 'tsw-l'; list.id = 'tsw-list'; list.hidden = true;
     var items = '<div class="tsw-h">Style</div><div class="tsw-s" role="group" aria-label="Minimal or maximal">';
     STYLES.forEach(function (s) { items += '<button type="button" data-style="' + s.id + '" aria-pressed="false">' + s.name + '</button>'; });
