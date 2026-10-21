@@ -7,7 +7,7 @@
   var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduced) return;
   var raf = 0;
-  function on() { return html.getAttribute('data-skin') === 'dawn' || html.getAttribute('data-light') === 'dawn'; }
+  function on() { return html.getAttribute('data-style') !== 'minimal' && (html.getAttribute('data-skin') === 'dawn' || html.getAttribute('data-light') === 'dawn'); }
   function update() {
     raf = 0;
     if (!on()) return;
