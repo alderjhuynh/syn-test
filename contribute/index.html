@@ -48,6 +48,35 @@
 </footer>
 </div>
 
+<div id="gallery3d" hidden role="dialog" aria-modal="true" aria-label="3D gallery">
+  <div id="gl-host"></div>
+  <div class="hud">
+    <div class="hud-top">
+      <button class="hud-btn" id="gl-exit" type="button">&larr; Exit to site</button>
+      <div class="hud-right">
+        <label class="sr" for="hud-q">Quality</label>
+        <select id="hud-q" class="hud-btn"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select>
+        <button class="hud-btn" id="gl-stats-btn" type="button" aria-pressed="false">Stats</button>
+      </div>
+    </div>
+    <div class="hud-pill" id="gl-room" role="status" aria-live="polite"></div>
+    <canvas id="gl-map" width="124" height="124" aria-hidden="true"></canvas>
+    <div class="hud-stats" id="gl-stats" hidden></div>
+    <div class="cross" aria-hidden="true"></div>
+    <button class="hud-read" id="gl-read" type="button" hidden></button>
+    <div id="joy" aria-hidden="true"><div id="knob"></div></div>
+    <p class="hud-help"><span class="m">WASD or arrows to walk, mouse to look, E to read.</span></p>
+  </div>
+  <div class="gl-load" id="gl-load">
+    <div class="box">
+      <h2 id="gl-title">Opening the gallery</h2>
+      <p id="gl-msg">Loading the 3D library.</p>
+      <button class="btn btn-primary" type="button" id="gl-go" hidden>Start walking</button>
+      <button class="btn btn-ghost" type="button" id="gl-back" hidden>Back to the site</button>
+    </div>
+  </div>
+</div>
+
 <!-- tiny DOM + environment helpers -->
 <script src="../src/util.js"></script>
 <!-- shared state -->
