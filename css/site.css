@@ -2,9 +2,20 @@
 .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-block:.75rem}
 .brand{font-family:var(--f-display);font-weight:700;font-size:1rem;letter-spacing:-.02em;text-decoration:none}
 .nav{display:flex;align-items:center;gap:1.6rem}
+.nav-links{display:contents}
 .nav a:not(.btn){font-size:.9rem;text-decoration:none;color:var(--muted)}
 .nav a:not(.btn):hover{color:var(--ink)}
-@media (max-width:700px){.nav a:not(.btn){display:none}}
+.nav a[aria-current=page]{color:var(--ink)}
+.nav-menu{display:none;background:none;border:1px solid var(--line);border-radius:2px;padding:.4rem .7rem;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);cursor:pointer}
+.nav-menu:hover{border-color:var(--ink)}
+
+.top.nav-compact .nav{gap:.75rem}
+.top.nav-compact .nav-menu{display:inline-flex}
+.top.nav-compact .nav-links{position:absolute;top:100%;left:0;right:0;z-index:9;display:none;flex-direction:column;align-items:stretch;gap:0;padding:.1rem clamp(1rem,4vw,1.5rem) .9rem;background:var(--bg);border-bottom:1px solid var(--line)}
+.top.nav-compact.nav-open .nav-links{display:flex}
+.top.nav-compact .nav-links a:not(.btn):not(:first-child){padding-block:.6rem;border-top:1px solid var(--line)}
+.top.nav-compact .nav-links a:not(.btn):first-child{padding-block:.6rem}
+.top.nav-compact .nav-links a:not(.btn):hover{color:var(--accent)}
 
 .hero{padding-block:clamp(2.5rem,6vw,5rem) clamp(2.5rem,6vw,4.5rem)}
 .hero h1{font-size:clamp(3.1rem,11.2vw,9.2rem);font-weight:700;letter-spacing:-.05em;line-height:.9;margin:1.1rem 0 clamp(2rem,5vw,3.6rem);max-width:12ch}
