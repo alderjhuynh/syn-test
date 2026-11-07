@@ -14,9 +14,10 @@ var WINGS=[
 var WING={};WINGS.forEach(function(w){WING[w.id]=w});
 var FLOOR='#c4c6c8';
 var POSTER_DIR='/assets/artifact/eden/our-future/';
+var OF_TEXT='A public awareness campaign designed to promote community-based environmental initiatives across the country. Advertisements promoted different local involvement opportunities in various environments.';
 var ARTS=[
  {id:'OF',wing:'east',title:'Our Future, Our Actions',name:'Our Future, Our Actions Campaign',year:'2030',origin:'United States',
-  desc:'A public awareness campaign designed to promote community-based environmental initiatives across the country. Advertisements promoted different local involvement opportunities in various environments.',
+  desc:OF_TEXT,
   posters:[
    {cap:'Beach cleanup',img:POSTER_DIR+'Beach cleanup.png'},
    {cap:'Clothing swap',img:POSTER_DIR+'Clothing swap.png'},
@@ -24,6 +25,10 @@ var ARTS=[
    {cap:'Tree planting',img:POSTER_DIR+'Tree planting.png'}
   ],
   row:{u:9.2,side:-1,pw:2.05,gap:.75}},
+ {id:'OF-1',wing:'east',title:'Our Future, Our Actions: Beach cleanup',name:'Our Future, Our Actions Campaign',year:'2030',origin:'United States',desc:OF_TEXT,img:POSTER_DIR+'Beach cleanup.png'},
+ {id:'OF-2',wing:'east',title:'Our Future, Our Actions: Clothing swap',name:'Our Future, Our Actions Campaign',year:'2030',origin:'United States',desc:OF_TEXT,img:POSTER_DIR+'Clothing swap.png'},
+ {id:'OF-3',wing:'east',title:'Our Future, Our Actions: E-waste collection',name:'Our Future, Our Actions Campaign',year:'2030',origin:'United States',desc:OF_TEXT,img:POSTER_DIR+'Ewaste.png'},
+ {id:'OF-4',wing:'east',title:'Our Future, Our Actions: Tree planting',name:'Our Future, Our Actions Campaign',year:'2030',origin:'United States',desc:OF_TEXT,img:POSTER_DIR+'Tree planting.png'},
  {id:'N-1',wing:'north',title:'Example Project 1',year:'20XX',by:'Example team',text:'This is an example description.'},
  {id:'N-2',wing:'north',title:'Example Project 2',year:'20XX',by:'Example team',text:'This is an example description.'},
  {id:'S-1',wing:'south',title:'Example Project 5',year:'20XX',by:'Example team',text:'This is an example description.'},
