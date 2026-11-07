@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-skin="papercut" data-style="maximal">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -11,8 +11,11 @@
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/site.css">
 <link rel="stylesheet" href="css/gallery.css">
-<!-- RM TS BEFORE PROD -->
-<script src="src/theme-switcher.js"></script>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..700,60&display=swap">
+<link rel="stylesheet" href="css/skins/papercut.css">
 </head>
 <body>
 
@@ -84,8 +87,8 @@
     <div>
       <p class="mono" id="pl-cat"></p>
       <h3 id="pl-title" style="margin-block:.5rem .8rem;font-size:1.7rem;font-weight:700;letter-spacing:-.025em"></h3>
-      <p id="pl-text"></p>
-      <dl><dt>Wing</dt><dd id="pl-wing"></dd><dt>Era</dt><dd id="pl-year"></dd><dt>Stewarded by</dt><dd id="pl-by"></dd></dl>
+      
+      <dl><dt>Name</dt><dd id="pl-name"></dd><dt>Wing</dt><dd id="pl-wing"></dd><dt>Year</dt><dd id="pl-year"></dd><dt>Origin</dt><dd id="pl-origin"></dd><dt>Description</dt><dd id="pl-desc"></dd></dl>
       <div class="btn-row" style="margin-top:1.4rem"><button class="btn btn-primary" type="button" id="pl-close">Close</button></div>
     </div>
   </div>

@@ -8,16 +8,7 @@
   --f-body:'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
   --f-mono:'DM Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#0d0e10; --surface:#15171a; --ink:#eceef0; --muted:#9aa0a8; --line:#2a2d32;
-    --accent:#93a2ff; --accent-ink:#0d0e10; --frame:#3b3f45; --focus:#93a2ff; color-scheme:dark;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#0d0e10; --surface:#15171a; --ink:#eceef0; --muted:#9aa0a8; --line:#2a2d32;
-  --accent:#93a2ff; --accent-ink:#0d0e10; --frame:#3b3f45; --focus:#93a2ff; color-scheme:dark;
-}
+
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none!important}
 html{scroll-behavior:smooth}

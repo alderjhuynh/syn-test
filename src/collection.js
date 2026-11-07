@@ -5,7 +5,7 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
 function cardHTML(a){
   return '<button class="art" type="button" data-open="'+a.id+'" aria-label="Read placard: '+esc(a.title)+'">'+
    '<div class="frame"><div class="mat"><canvas data-art="'+a.id+'" width="400" height="500" aria-hidden="true"></canvas></div></div>'+
-   '<div class="plate">'+a.id+' · '+a.year+'<b>'+esc(a.title)+'</b>'+esc(a.by)+'</div></button>';
+   '<div class="plate">'+a.id+' · '+a.year+'<b>'+esc(a.title)+'</b>'+esc(a.by||a.name||'')+'</div></button>';
 }
 function fillCards(root,ids){if(!root)return;root.innerHTML=ids.map(function(id){return cardHTML(ART[id])}).join('')}
 
@@ -18,8 +18,8 @@ if(wingsEl)WINGS.forEach(function(w){
     '<div class="wing-art">'+arts.map(cardHTML).join('')+'</div>';
   wingsEl.appendChild(s);
 });
-fillCards($('#hero-wall'),['N-1','E-1','S-1']);
-$$('canvas[data-art]').forEach(function(cv){paint(cv.getContext('2d'),cv.width,cv.height,ART[cv.dataset.art])});
+fillCards($('#hero-wall'),['OF','N-1','S-1']);
+$$('canvas[data-art]').forEach(function(cv){drawArt(cv,ART[cv.dataset.art])});
 
 var chips=$('#chips');
 if(chips){

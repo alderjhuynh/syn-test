@@ -282,8 +282,10 @@ function startWorld(qk, pose) {
     }), sp.x, 4.4, sp.z, inward);
 
     // paintings
+    // (image-based art with `img` gets its own cards, and `posters` exhibits
+    // get a wall row below, so skip them here)
     ARTS.filter(function (s) {
-      return s.wing === w.id;
+      return s.wing === w.id && !s.posters && !s.img;
     }).forEach(function (art, i) {
       var side = i === 0 ? -1 : 1;
       var u = i === 0 ? 6 : 11;
@@ -366,6 +368,116 @@ function startWorld(qk, pose) {
       room.pools.push({ x: fp.x, z: fp.z, r: 3.4, a: .5 });
     });
 
+    // image exhibits: all of an artifact's posters, hung in a row on a side
+    // wall with a shared readable placard
+    ARTS.filter(function (s) {
+      return s.posters && s.wing === w.id;
+    }).forEach(function (ex) {
+      var side = ex.row.side;
+      var base = toW(ex.row.u, side * 7.8);
+      var n = { x: -side * r.x, z: -side * r.z };
+      var yaw = Math.atan2(n.x, n.z);
+      var tx = -n.z;
+      var tz = n.x;
+
+      function put(mesh, off, lat, y) {
+        mesh.position.set(
+          base.x + n.x * off + tx * lat,
+          y,
+          base.z + n.z * off + tz * lat
+        );
+        mesh.rotation.y = yaw;
+        return add(room, mesh);
+      }
+
+      var PW = ex.row.pw;                  // poster width
+      var GAP = ex.row.gap;                // wall between posters
+      var PH = PW / POSTER_A;              // keeps the files' 3:4 ratio
+      var PITCH = PW + GAP;                // spacing down the wall
+      var COUNT = ex.posters.length;
+      var ROW_W = PITCH * (COUNT - 1) + PW; // the row's footprint on the wall
+      var CY = 2.5;                        // row centre height
+
+      var glowMat = new T.MeshBasicMaterial({
+        map: glowTex,
+        transparent: true,
+        depthWrite: false,
+        blending: T.AdditiveBlending,
+        opacity: .35,
+        polygonOffset: true,
+        polygonOffsetFactor: -1,
+        polygonOffsetUnits: -1
+      });
+      var tl = new T.TextureLoader();
+
+      ex.posters.forEach(function (p, i) {
+        var lat = (i - (COUNT - 1) / 2) * PITCH;
+
+        // additive glow
+        put(new T.Mesh(
+          new T.PlaneGeometry(PW + .8, PH + .8),
+          glowMat
+        ), .03, lat, CY);
+
+        // slim frame
+        put(new T.Mesh(
+          new T.BoxGeometry(PW + .1, PH + .1, .1),
+          frameMat
+        ), .05, lat, CY);
+
+        // poster, loaded from the real image file
+        var map = tl.load(p.img.split(' ').join('%20'), undefined, undefined, function () {});
+        map.anisotropy = maxAniso;
+
+        put(new T.Mesh(
+          new T.PlaneGeometry(PW, PH),
+          MB({ map: map })
+        ), .112, lat, CY);
+      });
+
+      // readable placard: a long wall label under the whole row
+      var W2 = 1640;
+      var H2 = Math.round(W2 * .6 / ROW_W);
+      put(new T.Mesh(
+        new T.PlaneGeometry(ROW_W, .6),
+        MB({
+          map: tex(W2, H2, function (x, tw, th) {
+            x.fillStyle = '#15171a';
+            x.fillRect(0, 0, tw, th);
+            x.textBaseline = 'middle';
+
+            x.textAlign = 'left';
+            x.fillStyle = '#8b929b';
+            x.font = '400 24px "DM Mono", monospace';
+            x.fillText(ex.id + ' · ' + ex.year, 40, th / 2);
+
+            x.fillStyle = '#f4f5f6';
+            x.font = '700 40px "Schibsted Grotesk", system-ui, sans-serif';
+            x.fillText(ex.title, 200, th / 2);
+
+            x.textAlign = 'right';
+            x.fillStyle = '#8b929b';
+            x.font = '400 22px "DM Mono", monospace';
+            x.fillText((ex.name || '').toUpperCase(), tw - 40, th / 2);
+          })
+        })
+      ), .05, 0, .75);
+
+      // readable from anywhere along the row
+      for (var ri = 0; ri < 2; ri++) {
+        paints.push({
+          art: ex,
+          x: base.x + n.x * .25 + tx * (ri ? ROW_W / 4 : -ROW_W / 4),
+          z: base.z + n.z * .25 + tz * (ri ? ROW_W / 4 : -ROW_W / 4),
+          n: n,
+          room: room.id
+        });
+      }
+
+      var rp = toW(ex.row.u, side * (7.8 - 2.6));
+      room.pools.push({ x: rp.x, z: rp.z, r: 6, a: .55 });
+    });
+
     // title wall
     var tw = toW(17.7, 0);
     plane(room, 8, 2, tex(1024, 256, function (x, cw, ch) {
@@ -445,13 +557,13 @@ function startWorld(qk, pose) {
   var stopped = false;
 
   if (T.FBXLoader) {
-    new T.FBXLoader().load('assets/shork/Shork.fbx', function (obj) {
+    new T.FBXLoader().load('/assets/shork/Shork.fbx', function (obj) {
       if (stopped) return;
 
       // flat unlit materials, like the rest of the museum
       // (the FBX's Corona material has no map three.js understands, so load
       // the base color texture directly)
-      var skin = new T.TextureLoader().load('assets/shork/Shork_BaseColor.jpg');
+      var skin = new T.TextureLoader().load('/assets/shork/Shork_BaseColor.jpg');
       skin.anisotropy = maxAniso;
 
       obj.traverse(function (o) {

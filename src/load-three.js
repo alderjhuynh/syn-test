@@ -22,7 +22,7 @@ function loadScript(src){
 function loadFBXSupport(){
   if(window.THREE&&THREE.FBXLoader)return Promise.resolve();
   if(fbxP)return fbxP;
-  fbxP=loadScript('src/vendor/fflate.min.js').then(function(){return loadScript('src/vendor/FBXLoader.js')}).catch(function(e){fbxP=null;throw e});
+  fbxP=loadScript('/src/vendor/fflate.min.js').then(function(){return loadScript('/src/vendor/FBXLoader.js')}).catch(function(e){fbxP=null;throw e});
   return fbxP;
 }
 function fontsReady(){

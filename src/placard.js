@@ -5,9 +5,9 @@
 modal=$('#placard');
 function openPlacard(id){
   var a=ART[id];if(!a)return;var w=WING[a.wing];
-  paint($('#pl-canvas').getContext('2d'),480,600,a);
-  $('#pl-cat').textContent='Accession '+a.id;$('#pl-title').textContent=a.title;$('#pl-text').textContent=a.text;
-  $('#pl-wing').textContent=w.name;$('#pl-year').textContent=String(a.year);$('#pl-by').textContent=a.by;
+  drawArt($('#pl-canvas'),a);
+  $('#pl-cat').textContent='Accession '+a.id;$('#pl-title').textContent=a.title;$('#pl-desc').textContent=a.desc||a.text||'';
+  $('#pl-name').textContent=a.name||a.title;$('#pl-wing').textContent=w.name;$('#pl-year').textContent=String(a.year);$('#pl-origin').textContent=a.origin||'—';
   modalFrom=document.activeElement;modal.hidden=false;$('#pl-close').focus();
   if(document.pointerLockElement&&document.exitPointerLock)document.exitPointerLock();
   if(world)world.pause(true);
