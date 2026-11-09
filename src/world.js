@@ -952,6 +952,13 @@ function startWorld(qk, pose) {
   var last = performance.now();
   var cleanup = [];
   var RAD = .35;
+  var GRAVITY = 14; 
+  var JUMP_V = 4.6;
+  var jumpY = 0;
+  var vy = 0;
+  var jumpReq = false;
+
+
 
   function collide(nx, nz) {
     for (var it = 0; it < 2; it++) {
@@ -1022,6 +1029,7 @@ function startWorld(qk, pose) {
     else if (k === 'shift') keys.sh = 1;
     else if (k === 'e') readNearest();
     else if (k === 'f') toggleStats();
+    else if (k === ' ') { if (!e.repeat) jumpReq = true; e.preventDefault(); }
     else if (k === 'escape' && !document.pointerLockElement) exit3D();
 
     if (k.indexOf('arrow') === 0) e.preventDefault();
@@ -1237,11 +1245,22 @@ function startWorld(qk, pose) {
       if (keys.tl) P.yaw += 1.8 * dt;
       if (keys.tr) P.yaw -= 1.8 * dt;
 
+      if (jumpReq && jumpY === 0 && vy === 0) vy = JUMP_V;
+      jumpReq = false;
+
+      if (vy !== 0 || jumpY > 0) {
+        vy -= GRAVITY * dt;
+        jumpY += vy * dt;
+        if (jumpY <= 0) { jumpY = 0; vy = 0; }
+      }
+
       if (!reduceMotion) {
         spin.forEach(function (s) {
           s.m.rotation.y += s.s * dt;
         });
       }
+
+      camera.position.set(P.x, 1.65 + jumpY, P.z);
 
       cur = roomAt(P.x, P.z);
 
@@ -1297,7 +1316,7 @@ function startWorld(qk, pose) {
       }
     }
 
-    camera.position.set(P.x, 1.65, P.z);
+    camera.position.set(P.x, 1.65 + jumpY, P.z);
     camera.rotation.set(P.pitch, P.yaw, 0, 'YXZ');
     renderer.render(scene, camera);
 
