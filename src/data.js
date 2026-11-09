@@ -25,10 +25,6 @@ var ARTS=[
    {cap:'Tree planting',img:POSTER_DIR+'Tree planting.png'}
   ],
   row:{u:9.2,side:-1,pw:2.05,gap:.75}},
- {id:'OF-1',wing:'east',title:'Our Future, Our Actions: Beach cleanup',name:'Our Future, Our Actions Campaign',year:'2030',origin:'United States',desc:OF_TEXT,img:POSTER_DIR+'Beach cleanup.png'},
- {id:'OF-2',wing:'east',title:'Our Future, Our Actions: Clothing swap',name:'Our Future, Our Actions Campaign',year:'2030',origin:'United States',desc:OF_TEXT,img:POSTER_DIR+'Clothing swap.png'},
- {id:'OF-3',wing:'east',title:'Our Future, Our Actions: E-waste collection',name:'Our Future, Our Actions Campaign',year:'2030',origin:'United States',desc:OF_TEXT,img:POSTER_DIR+'Ewaste.png'},
- {id:'OF-4',wing:'east',title:'Our Future, Our Actions: Tree planting',name:'Our Future, Our Actions Campaign',year:'2030',origin:'United States',desc:OF_TEXT,img:POSTER_DIR+'Tree planting.png'},
  {id:'CI-1',wing:'north',title:'Cook Islands Climate and Indigenous Heritage Treaty',name:'Cook Islands Climate and Indigenous Heritage Treaty',year:'2063',
   origin:'Rarotonga, Cook Islands.',
   desc:'This protest, led by Cook Islands community members, youth, and Indigenous leaders, calls for stronger international climate action and protection of Pacific Island communities from rising sea levels. Protesters demand greater recognition of Indigenous land and ocean rights, funding for climate adaptation, and protection of their cultural heritage. The movement raises international awareness and helps inspire the creation of the 2063 Cook Islands Climate and Indigenous Heritage Treaty.',

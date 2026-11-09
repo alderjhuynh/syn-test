@@ -100,3 +100,8 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem
 .modal-card dl{margin:1.2rem 0 0;display:grid;grid-template-columns:auto 1fr;gap:.4rem 1.2rem;font-size:.92rem;border-top:1px solid var(--line);padding-top:1rem}
 .modal-card dt{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:.2rem}
 .modal-card dd{margin:0}
+
+.pl-posters{display:flex;gap:.8rem;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;padding-bottom:.6rem;align-self:start;min-width:0;max-height:min(70vh,34rem)}
+.pl-posters figure{flex:0 0 82%;margin:0;scroll-snap-align:start;display:grid;gap:.4rem;align-content:start}
+.pl-posters img{display:block;width:100%;height:auto;max-height:calc(min(70vh,34rem) - 3rem);object-fit:contain;object-position:top;background:var(--mat)}
+.pl-posters figcaption{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
