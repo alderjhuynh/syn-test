@@ -37,5 +37,14 @@ var ARTS=[
   origin:'International Climate Cooperation Archive',
   desc:"This timeline documents the international treaties, agreements, amendments, and climate-related legislation established between 2000 and 2100. It highlights major milestones in global climate cooperation, showing how countries worked together to reduce greenhouse gas emissions, protect ecosystems, advance renewable energy, and promote environmental justice. Visitors can explore key agreements throughout the century and see how international commitments helped shape the world's response to the climate crisis.",
   img:'/assets/artifact/issi/you-need-to-stop-using-ai-in-your-projects/Treaty Timeline.png',size:[2000,800],slot:{u:9.2,side:-1,pw:10.5}},
+ {id:'RRR-1',wing:'east',title:'Reuse, Reduce, Recycle Ordinance',name:'Reuse, Reduce, Recycle Ordinance',year:'2042',origin:'Rio De Janeiro, Brazil',
+  desc:'A policy designed to reduce urban waste by replacing unnecessary plastics with sustainable, eco-friendly materials throughout the city. The ordinance completely banned single-use products and other disposables. These items were replaced with reusable and recyclable alternatives, successfully reducing landfill waste and halting plastic pollution in the city by over 30% in just six months.',
+  img:'/assets/artifact/eden/reuse-reduce-recycle-ordinance/Reuse Reduce Recycle.png',size:[1728,2688],slot:{u:3.6,side:1}},
+ {id:'CGN-1',wing:'east',title:'The Community Garden Network',name:'The Community Garden Network',year:'2065',origin:'Tokyo, Japan',
+  desc:'An expansion of community-based urban agriculture designed to support local food resources, improve environmental conditions, and promote togetherness through community involvement. The Garden Network granted citizens all across Tokyo more access to healthy, fresh produce without the high costs.',
+  img:'/assets/artifact/eden/the-community-garden-network/Garden Network.png',size:[2000,1414],slot:{u:9.2,side:1}},
+ {id:'TSOB-1',wing:'east',title:'Two Sides, One Blanket',name:'Two Sides, One Blanket',year:'2025',origin:'University of California, San Diego',
+  desc:'An educational art project created by Synthesis students at UC San Diego targeting circular fashion and its potential positive impact on the climate crisis. This infinity blanket has two contrasting sides, one using raw and one using upcycled materials to demonstrate the life cycle of clothing. This project raised awareness about fast fashion and overconsumption, showcasing a future for sustainable fashion.',
+  img:'/assets/artifact/eden/two-sides-one-blanket/2sides1blanketfin.png',size:[1658,662],slot:{u:14.8,side:1,pw:4}},
 ];
 var ART={};ARTS.forEach(function(a){ART[a.id]=a});
