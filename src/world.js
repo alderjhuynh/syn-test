@@ -1204,6 +1204,108 @@ function startWorld(qk, pose) {
     mm.restore();
   }
 
+  //   left stick / d-pad up+down         walk        
+  //   right stick / d-pad left+right     look
+  //   LT, RT or L3                       run        
+  //   A  read nearest label, else        jump
+  //   RB                                 jump        
+  //   X                                  read nearest label
+  //   Y                                  stats       
+  //   B                                  close label
+  //   Start                              leave gallery
+  var pad = { f: 0, s: 0, lx: 0, ly: 0, run: false };
+  var padPrev = [];
+  var PAD_DEAD = .18;
+  var PAD_TURN = 2.4;
+  var PAD_PITCH = 1.8;
+
+  function deadzone(x, y) {
+    var m = Math.hypot(x, y);
+    if (m < PAD_DEAD) return [0, 0];
+    var k = (Math.min(m, 1) - PAD_DEAD) / (1 - PAD_DEAD) / m;
+    return [x * k, y * k];
+  }
+
+  function pollPad() {
+    pad.f = 0;
+    pad.s = 0;
+    pad.lx = 0;
+    pad.ly = 0;
+    pad.run = false;
+
+    var list = navigator.getGamepads ? navigator.getGamepads() : [];
+    var g = null;
+
+    for (var i = 0; i < list.length; i++) {
+      if (list[i] && list[i].connected) {
+        g = list[i];
+        break;
+      }
+    }
+
+    if (!g) {
+      padPrev = [];
+      return false;
+    }
+
+    function down(n) {
+      return !!(g.buttons[n] && g.buttons[n].pressed);
+    }
+
+    // edge detection
+    function hit(n) {
+      var d = down(n);
+      var was = padPrev[n];
+      padPrev[n] = d;
+      return d && !was;
+    }
+
+    var A = hit(0), B = hit(1), X = hit(2), Y = hit(3), RB = hit(5), START = hit(9);
+
+    if (!loadEl.hidden) {
+      var go = $('#gl-go');
+      if (A && !go.hidden) go.click();
+      return false;
+    }
+
+    // label dialog is open
+    if (!modal.hidden) {
+      if (A || B) closePlacard();
+      return false;
+    }
+
+    if (paused) return false;
+
+    if (START) {
+      exit3D();
+      return true;
+    }
+
+    if (A) {
+      if (nearest) readNearest();
+      else jumpReq = true;
+    }
+    if (X) readNearest();
+    if (RB) jumpReq = true;
+    if (Y) toggleStats();
+
+    var l = deadzone(g.axes[0] || 0, g.axes[1] || 0);
+    var r = deadzone(g.axes[2] || 0, g.axes[3] || 0);
+
+    pad.s = l[0];
+    pad.f = -l[1] + (down(12) ? 1 : 0) - (down(13) ? 1 : 0);
+
+    pad.lx = r[0] * Math.abs(r[0]) + (down(15) ? .75 : 0) - (down(14) ? .75 : 0);
+    pad.ly = r[1] * Math.abs(r[1]);
+    pad.run = down(10) || down(6) || down(7);
+
+    return false;
+  }
+
+  on(window, 'gamepadconnected', function () {
+    padPrev = [];
+  });
+
   var frames = 0;
   var acc = 0;
   var fc = 0;
@@ -1216,14 +1318,16 @@ function startWorld(qk, pose) {
     var dt = Math.min(.05, (now - last) / 1000);
     last = now;
 
+    if (pollPad()) return;
+
     if (!paused) {
       // movement
       var fx = -Math.sin(P.yaw);
       var fz = -Math.cos(P.yaw);
       var rx = Math.cos(P.yaw);
       var rz = -Math.sin(P.yaw);
-      var f = (keys.f ? 1 : 0) - (keys.b ? 1 : 0) - joyV.y;
-      var sd = (keys.r ? 1 : 0) - (keys.l ? 1 : 0) + joyV.x;
+      var f = (keys.f ? 1 : 0) - (keys.b ? 1 : 0) - joyV.y + pad.f;
+      var sd = (keys.r ? 1 : 0) - (keys.l ? 1 : 0) + joyV.x + pad.s;
       var m = Math.hypot(f, sd);
 
       if (m > 1) {
@@ -1231,7 +1335,7 @@ function startWorld(qk, pose) {
         sd /= m;
       }
 
-      var sp = (keys.sh ? 5.6 : 3.4) * dt;
+      var sp = (keys.sh || pad.run ? 5.6 : 3.4) * dt;
 
       if (f || sd) {
         var c = collide(
@@ -1244,6 +1348,11 @@ function startWorld(qk, pose) {
 
       if (keys.tl) P.yaw += 1.8 * dt;
       if (keys.tr) P.yaw -= 1.8 * dt;
+
+      if (pad.lx || pad.ly) {
+        P.yaw -= pad.lx * PAD_TURN * dt;
+        P.pitch = Math.max(-1.2, Math.min(1.2, P.pitch - pad.ly * PAD_PITCH * dt));
+      }
 
       if (jumpReq && jumpY === 0 && vy === 0) vy = JUMP_V;
       jumpReq = false;
