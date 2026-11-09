@@ -68,8 +68,11 @@ function drawArt(cv,a){
       imgArt(p.img,function(im){drawImgNice(x,im,cx0,cy0,cw2,ch)});
     });
   }else if(a.img){
-    var m=W*.04,bw=W-2*m,bh=H-2*m,k=Math.min(bw/1728,bh/2304),w2=1728*k,h2=2304*k;
-    imgArt(a.img,function(im){drawImgNice(x,im,(W-w2)/2,(H-h2)/2,w2,h2)});
+    var m=W*.04,bw=W-2*m,bh=H-2*m;
+    imgArt(a.img,function(im){
+      var k=Math.min(bw/im.width,bh/im.height),w2=im.width*k,h2=im.height*k;
+      drawImgNice(x,im,(W-w2)/2,(H-h2)/2,w2,h2);
+    });
   }else{
     paint(x,W,H,a);
   }

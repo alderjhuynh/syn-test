@@ -180,6 +180,7 @@ function startWorld(qk, pose) {
 
   var frameMat = new T.MeshBasicMaterial({ color: '#17191c' });
   var whiteMat = MB({ color: '#ffffff' });
+  var imgLoader = new T.TextureLoader(); // loads real image files (posters, scans)
 
   var glowTex = tex(128, 128, function (x, w, h) {
     var g = x.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2);
@@ -405,10 +406,9 @@ function startWorld(qk, pose) {
         blending: T.AdditiveBlending,
         opacity: .35,
         polygonOffset: true,
-        polygonOffsetFactor: -1,
-        polygonOffsetUnits: -1
+        polygonOffsetUnits: -1,
+        polygonOffsetFactor: -1
       });
-      var tl = new T.TextureLoader();
 
       ex.posters.forEach(function (p, i) {
         var lat = (i - (COUNT - 1) / 2) * PITCH;
@@ -425,8 +425,8 @@ function startWorld(qk, pose) {
           frameMat
         ), .05, lat, CY);
 
-        // poster, loaded from the real image file
-        var map = tl.load(p.img.split(' ').join('%20'), undefined, undefined, function () {});
+        // poster
+        var map = imgLoader.load(p.img.split(' ').join('%20'), undefined, undefined, function () {});
         map.anisotropy = maxAniso;
 
         put(new T.Mesh(
@@ -476,6 +476,107 @@ function startWorld(qk, pose) {
 
       var rp = toW(ex.row.u, side * (7.8 - 2.6));
       room.pools.push({ x: rp.x, z: rp.z, r: 6, a: .55 });
+    });
+
+    // single image pieces
+    ARTS.filter(function (s) {
+      return s.img && s.slot && s.wing === w.id;
+    }).forEach(function (art, i) {
+      var side = art.slot.side;
+      var u = art.slot.u;
+      var base = toW(u, side * 7.8);
+      var n = { x: -side * r.x, z: -side * r.z };
+      var yaw = Math.atan2(n.x, n.z);
+      var tx = -n.z;
+      var tz = n.x;
+
+      function put(mesh, off, lat, y) {
+        mesh.position.set(
+          base.x + n.x * off + tx * lat,
+          y,
+          base.z + n.z * off + tz * lat
+        );
+        mesh.rotation.y = yaw;
+        return add(room, mesh);
+      }
+
+      var asp = art.size[0] / art.size[1];
+      var pw = 3.4, ph = 2.45, cy = 2.5;
+      if (asp >= 1) {
+        pw = art.slot.pw || pw
+        ph = pw / asp;
+        cy = ph > 3.4 ? 2.5 : 2.3;
+      } else {
+        ph = 2.6;
+        pw = ph * asp;
+      }
+
+      // additive glow
+      put(new T.Mesh(
+        new T.PlaneGeometry(pw + .8, ph + .8),
+        new T.MeshBasicMaterial({
+          map: glowTex,
+          transparent: true,
+          depthWrite: false,
+          blending: T.AdditiveBlending,
+          opacity: .55,
+          polygonOffset: true,
+          polygonOffsetFactor: -1,
+          polygonOffsetUnits: -1
+        })
+      ), .03, 0, cy);
+
+      // frame
+      put(new T.Mesh(
+        new T.BoxGeometry(pw + .54, ph + .54, .1),
+        frameMat
+      ), .05, 0, cy);
+
+      // white mat behind image
+      put(new T.Mesh(
+        new T.PlaneGeometry(pw + .32, ph + .32),
+        whiteMat
+      ), .112, 0, cy);
+
+      // the image itself
+      var map = imgLoader.load(art.img.split(' ').join('%20'), undefined, undefined, function () {});
+      map.anisotropy = maxAniso;
+
+      put(new T.Mesh(
+        new T.PlaneGeometry(pw, ph),
+        MB({ map: map })
+      ), .124, 0, cy);
+
+      // placard beside the frame
+      put(new T.Mesh(
+        new T.PlaneGeometry(1.1, .55),
+        MB({
+          map: tex(256, 128, function (x, tw, th) {
+            x.fillStyle = '#15171a';
+            x.fillRect(0, 0, tw, th);
+            x.fillStyle = '#f4f5f6';
+            x.textBaseline = 'top';
+            x.textAlign = 'left';
+
+            x.font = '400 15px "DM Mono", monospace';
+            x.fillText(art.id + '  ' + art.year, 14, 12);
+
+            x.font = '500 22px "Schibsted Grotesk", system-ui, sans-serif';
+            wrapText(x, art.title, 14, 40, tw - 28, 26);
+          })
+        })
+      ), .05, pw / 2 + .68, 1.1);
+
+      paints.push({
+        art: art,
+        x: base.x + n.x * .225,
+        z: base.z + n.z * .225,
+        n: n,
+        room: room.id
+      });
+
+      var pp = toW(u, side * (7.8 - 2.4));
+      room.pools.push({ x: pp.x, z: pp.z, r: 3.4, a: .5 });
     });
 
     // title wall

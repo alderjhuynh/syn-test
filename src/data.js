@@ -29,11 +29,16 @@ var ARTS=[
  {id:'OF-2',wing:'east',title:'Our Future, Our Actions: Clothing swap',name:'Our Future, Our Actions Campaign',year:'2030',origin:'United States',desc:OF_TEXT,img:POSTER_DIR+'Clothing swap.png'},
  {id:'OF-3',wing:'east',title:'Our Future, Our Actions: E-waste collection',name:'Our Future, Our Actions Campaign',year:'2030',origin:'United States',desc:OF_TEXT,img:POSTER_DIR+'Ewaste.png'},
  {id:'OF-4',wing:'east',title:'Our Future, Our Actions: Tree planting',name:'Our Future, Our Actions Campaign',year:'2030',origin:'United States',desc:OF_TEXT,img:POSTER_DIR+'Tree planting.png'},
+ {id:'CI-1',wing:'north',title:'Cook Islands Climate and Indigenous Heritage Treaty',name:'Cook Islands Climate and Indigenous Heritage Treaty',year:'2063',
+  origin:'Rarotonga, Cook Islands – A fictional international agreement established between the Cook Islands government, Indigenous Cook Islands representatives, traditional leaders, and international climate partners such as New Zealand and Australia.',
+  desc:'This treaty signed in 2063 established legal protections for Indigenous lands, cultural heritage, and marine ecosystems across the Cook Islands. It provides funding from New Zealand and Australia for climate adaptation while ensuring Indigenous communities have a central role in environmental decision-making. It also protects traditional knowledge, fishing practices, and culturally significant sites for future generations.',
+  img:'/assets/artifact/issi/this-poster-has-text-that-is-clearly-ai-generated-and-i-hate-it/Treaty document.png',size:[1654,2339],slot:{u:9.2,side:1}},
+ {id:'TT-1',wing:'west',title:'Treaty Timeline: A Century of Climate Cooperation',name:'Treaty Timeline: A Century of Climate Cooperation',year:'2000–2100',
+  origin:'International Climate Cooperation Archive',
+  desc:"This timeline documents the international treaties, agreements, amendments, and climate-related legislation established between 2000 and 2100. It highlights major milestones in global climate cooperation, showing how countries worked together to reduce greenhouse gas emissions, protect ecosystems, advance renewable energy, and promote environmental justice. Visitors can explore key agreements throughout the century and see how international commitments helped shape the world's response to the climate crisis.",
+  img:'/assets/artifact/issi/you-need-to-stop-using-ai-in-your-projects/Treaty Timeline.png',size:[2000,800],slot:{u:9.2,side:-1,pw:10.5}},
  {id:'N-1',wing:'north',title:'Example Project 1',year:'20XX',by:'Example team',text:'This is an example description.'},
- {id:'N-2',wing:'north',title:'Example Project 2',year:'20XX',by:'Example team',text:'This is an example description.'},
  {id:'S-1',wing:'south',title:'Example Project 5',year:'20XX',by:'Example team',text:'This is an example description.'},
  {id:'S-2',wing:'south',title:'Example Project 6',year:'20XX',by:'Example team',text:'This is an example description.'},
- {id:'W-1',wing:'west',title:'Example Project 7',year:'20XX',by:'Example team',text:'This is an example description.'},
- {id:'W-2',wing:'west',title:'Example Project 8',year:'20XX',by:'Example team',text:'This is an example description.'}
 ];
 var ART={};ARTS.forEach(function(a){ART[a.id]=a});
