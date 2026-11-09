@@ -37,8 +37,5 @@ var ARTS=[
   origin:'International Climate Cooperation Archive',
   desc:"This timeline documents the international treaties, agreements, amendments, and climate-related legislation established between 2000 and 2100. It highlights major milestones in global climate cooperation, showing how countries worked together to reduce greenhouse gas emissions, protect ecosystems, advance renewable energy, and promote environmental justice. Visitors can explore key agreements throughout the century and see how international commitments helped shape the world's response to the climate crisis.",
   img:'/assets/artifact/issi/you-need-to-stop-using-ai-in-your-projects/Treaty Timeline.png',size:[2000,800],slot:{u:9.2,side:-1,pw:10.5}},
- {id:'N-1',wing:'north',title:'Example Project 1',year:'20XX',by:'Example team',text:'This is an example description.'},
- {id:'S-1',wing:'south',title:'Example Project 5',year:'20XX',by:'Example team',text:'This is an example description.'},
- {id:'S-2',wing:'south',title:'Example Project 6',year:'20XX',by:'Example team',text:'This is an example description.'},
 ];
 var ART={};ARTS.forEach(function(a){ART[a.id]=a});
