@@ -4,10 +4,17 @@
 
 function escA(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}
 modal=$('#placard');
+function posterStrip(){
+  var el=$('#pl-posters');if(el)return el;
+  var fr=$('#pl-canvas').closest('.frame');fr.id='pl-frame';
+  el=document.createElement('div');el.id='pl-posters';el.className='pl-posters';el.hidden=true;
+  el.tabIndex=0;el.setAttribute('role','region');el.setAttribute('aria-label','Campaign posters, scroll sideways');
+  fr.after(el);return el;
+}
 function openPlacard(id){
   var a=ART[id];if(!a)return;var w=WING[a.wing];
   modalFrom=document.activeElement;modal.hidden=false;
-  var strip=$('#pl-posters'),frame=$('#pl-frame');
+  var strip=posterStrip(),frame=strip.previousElementSibling;
   if(a.posters){
     frame.hidden=true;strip.hidden=false;strip.scrollLeft=0;
     strip.innerHTML=a.posters.map(function(p){
@@ -31,6 +38,6 @@ $('#pl-close').addEventListener('click',closePlacard);
 modal.addEventListener('click',function(e){if(e.target===modal)closePlacard()});
 modal.addEventListener('keydown',function(e){if(e.key==='Escape'){e.stopPropagation();closePlacard()}if(e.key==='Tab'){
     e.preventDefault();
-    var strip=$('#pl-posters'),close=$('#pl-close');
+    var strip=posterStrip(),close=$('#pl-close');
     if(strip.hidden)close.focus();else (document.activeElement===close?strip:close).focus();
   }});

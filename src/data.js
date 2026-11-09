@@ -25,6 +25,9 @@ var ARTS=[
    {cap:'Tree planting',img:POSTER_DIR+'Tree planting.png'}
   ],
   row:{u:9.2,side:-1,pw:2.05,gap:.75}},
+ {id:'NF-1',wing:'west',title:'Sustainable Nuclear Fusion',name:'Sustainable Nuclear Fusion',year:'2061',origin:'Worldwide',
+  desc:'A major international organization standardizes one modular reactor design in place of several competing prototypes. Compact fusion plants of roughly 200 MW are built in factories and shipped to coastal sites, where seawater serves as both coolant and the lithium source for the plant\'s tritium, so no freshwater is needed to run them. Every fusion-powered compute campus sits on the shoreline or offshore, and waste heat is used in two stages. First it drives desalination, so these campuses produce freshwater that is shared with or sold to nearby cities. The remaining low-grade heat feeds aquaculture and district heating. Net-positive freshwater output becomes a standard, and permits come to require it.',
+  model:'fusion'},
  {id:'CI-1',wing:'north',title:'Cook Islands Climate and Indigenous Heritage Treaty',name:'Cook Islands Climate and Indigenous Heritage Treaty',year:'2063',
   origin:'Rarotonga, Cook Islands.',
   desc:'This protest, led by Cook Islands community members, youth, and Indigenous leaders, calls for stronger international climate action and protection of Pacific Island communities from rising sea levels. Protesters demand greater recognition of Indigenous land and ocean rights, funding for climate adaptation, and protection of their cultural heritage. The movement raises international awareness and helps inspire the creation of the 2063 Cook Islands Climate and Indigenous Heritage Treaty.',

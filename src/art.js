@@ -73,6 +73,8 @@ function drawArt(cv,a){
       var k=Math.min(bw/im.width,bh/im.height),w2=im.width*k,h2=im.height*k;
       drawImgNice(x,im,(W-w2)/2,(H-h2)/2,w2,h2);
     });
+  }else if(a.model&&window.MODEL_THUMBS&&MODEL_THUMBS[a.model]){
+    paint(x,W,H,a);MODEL_THUMBS[a.model](x,W,H);
   }else{
     paint(x,W,H,a);
   }

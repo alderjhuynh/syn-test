@@ -286,7 +286,7 @@ function startWorld(qk, pose) {
     // (image-based art with `img` gets its own cards, and `posters` exhibits
     // get a wall row below, so skip them here)
     ARTS.filter(function (s) {
-      return s.wing === w.id && !s.posters && !s.img;
+      return s.wing === w.id && !s.posters && !s.img && !s.model;
     }).forEach(function (art, i) {
       var side = i === 0 ? -1 : 1;
       var u = i === 0 ? 6 : 11;
@@ -620,18 +620,34 @@ function startWorld(qk, pose) {
       z1: pc.z + .55
     });
 
-    var geo;
-    if (w.id === 'west') geo = new T.TorusGeometry(.34, .1, 12, 24);
-    else if (w.id === 'south') geo = new T.SphereGeometry(.4, 16, 12);
-    else if (w.id === 'east') geo = new T.ConeGeometry(.36, .8, 6);
-    else geo = new T.IcosahedronGeometry(.42, 0);
+    // a wing's pedestal normally gets a placeholder shape. If an ARTS entry for
+    // this wing has `model:'<key>'` and a builder is registered in
+    // MODEL_BUILDERS (src/models/), that model replaces the shape and becomes
+    // readable from every side of the plinth.
+    var pedArt = ARTS.filter(function (s) { return s.wing === w.id && s.model; })[0];
+    var build = pedArt && window.MODEL_BUILDERS && MODEL_BUILDERS[pedArt.model];
+    var sc;
 
-    var sc = new T.Mesh(geo, new T.MeshBasicMaterial({ color: w.color }));
-    sc.position.set(pc.x, 1.68, pc.z);
-    sc.add(new T.LineSegments(
-      new T.EdgesGeometry(geo),
-      new T.LineBasicMaterial({ color: '#1f2633' })
-    ));
+    if (build) {
+      sc = build(T, { color: w.color });
+      sc.position.set(pc.x, 1.18, pc.z); // stands on the plinth cap
+      [{ x: 1, z: 0 }, { x: -1, z: 0 }, { x: 0, z: 1 }, { x: 0, z: -1 }].forEach(function (nn) {
+        paints.push({ art: pedArt, x: pc.x + nn.x * .6, z: pc.z + nn.z * .6, n: nn, room: room.id });
+      });
+    } else {
+      var geo;
+      if (w.id === 'west') geo = new T.TorusGeometry(.34, .1, 12, 24);
+      else if (w.id === 'south') geo = new T.SphereGeometry(.4, 16, 12);
+      else if (w.id === 'east') geo = new T.ConeGeometry(.36, .8, 6);
+      else geo = new T.IcosahedronGeometry(.42, 0);
+
+      sc = new T.Mesh(geo, new T.MeshBasicMaterial({ color: w.color }));
+      sc.position.set(pc.x, 1.68, pc.z);
+      sc.add(new T.LineSegments(
+        new T.EdgesGeometry(geo),
+        new T.LineBasicMaterial({ color: '#1f2633' })
+      ));
+    }
 
     room.group.add(sc);
     spin.push({ m: sc, s: .6 });
