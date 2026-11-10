@@ -25,7 +25,7 @@ window.MODEL_BUILDERS.satellite = function (T, opts) {
     return m;
   }
 
-  // solar cells: dark blue grid
+  // solar cells
   var solarTex = tex(256, 128, function (x, w, h) {
     x.fillStyle = '#1d3f8a'; x.fillRect(0, 0, w, h);
     x.strokeStyle = '#6f93d8'; x.lineWidth = 3;
@@ -33,7 +33,7 @@ window.MODEL_BUILDERS.satellite = function (T, opts) {
     for (var j = 0; j <= 4; j++) { x.beginPath(); x.moveTo(0, j * h / 4); x.lineTo(w, j * h / 4); x.stroke(); }
     x.strokeStyle = '#e8eefc'; x.lineWidth = 8; x.strokeRect(0, 0, w, h);
   });
-  // radiator: white panel with the coolant lines showing
+  // radiator
   var radTex = tex(256, 256, function (x, w, h) {
     x.fillStyle = '#f4f5f6'; x.fillRect(0, 0, w, h);
     x.strokeStyle = '#ff8a4a'; x.lineWidth = 6;
@@ -43,26 +43,18 @@ window.MODEL_BUILDERS.satellite = function (T, opts) {
     x.strokeStyle = '#8b929b'; x.lineWidth = 8; x.strokeRect(0, 0, w, h);
   });
 
-  var Y = .44;   // bus centre height
+  var Y = .44;
 
-  // 1. display stand
-  part(new T.CylinderGeometry(.14, .15, .03, 28), '#15171a', 0, .015, 0);
-  part(new T.CylinderGeometry(.018, .018, .24, 10), '#7d8794', 0, .15, 0);
-  part(new T.CylinderGeometry(.05, .05, .02, 18), '#b9c0ca', 0, .27, 0);
-
-  // 2. gold-foil bus
   part(new T.BoxGeometry(.24, .26, .24), '#d9a83a', 0, Y, 0);
   part(new T.BoxGeometry(.25, .015, .25), '#8a6a1c', 0, Y - .1, 0, null, true);
   part(new T.BoxGeometry(.25, .015, .25), '#8a6a1c', 0, Y + .1, 0, null, true);
 
-  // 3. compute module on the front: dark rack faces with status lights
   part(new T.BoxGeometry(.17, .17, .03), '#2b3340', 0, Y, .135);
   for (var r = 0; r < 4; r++) {
     part(new T.BoxGeometry(.14, .02, .01), '#3d4858', 0, Y - .06 + r * .04, .155, null, true);
     part(new T.BoxGeometry(.012, .012, .012), r % 2 ? '#6fbf7f' : accent, .055, Y - .06 + r * .04, .163, null, true);
   }
 
-  // 4. solar arrays (XY plane) on booms
   [-1, 1].forEach(function (s) {
     part(new T.CylinderGeometry(.008, .008, .06, 8), '#7d8794', s * .15, Y, 0, null, true).rotation.z = Math.PI / 2;
     var panel = new T.Mesh(new T.BoxGeometry(.3, .22, .008), [
@@ -75,7 +67,6 @@ window.MODEL_BUILDERS.satellite = function (T, opts) {
     g.add(panel);
   });
 
-  // 5. radiators (YZ plane): the point of the exhibit, waste heat goes to space
   [-1, 1].forEach(function (s) {
     var radMat = new T.MeshBasicMaterial({ map: radTex });
     var side = new T.MeshBasicMaterial({ color: '#d9dde3' });
@@ -83,13 +74,11 @@ window.MODEL_BUILDERS.satellite = function (T, opts) {
     panel.position.set(0, Y, s * .35);
     panel.add(new T.LineSegments(new T.EdgesGeometry(panel.geometry), edgeMat));
     g.add(panel);
-    // coolant lines from bus to panel
     [-.07, .07].forEach(function (dy) {
       part(new T.CylinderGeometry(.009, .009, .08, 8), '#ff7a3d', 0, Y + dy, s * .16, null, true).rotation.x = Math.PI / 2;
     });
   });
 
-  // 6. comms dish and star tracker on top
   part(new T.CylinderGeometry(.012, .012, .08, 8), '#7d8794', 0, Y + .17, 0, null, true);
   var dish = part(new T.SphereGeometry(.1, 20, 8, 0, Math.PI * 2, 0, .75), new T.MeshBasicMaterial({ color: '#f2f4f8', side: T.DoubleSide }), 0, Y + .27, 0, null, true);
   dish.rotation.x = Math.PI - .35;
@@ -100,7 +89,6 @@ window.MODEL_BUILDERS.satellite = function (T, opts) {
   return g;
 };
 
-// front schematic for the 2D card
 window.MODEL_THUMBS.satellite = function (x, W, H) {
   var cx = W / 2, u = W / 100, cy = H / u * .52;
   function rect(c, rx, ry, rw, rh) { x.fillStyle = c; x.fillRect(cx + rx * u, (cy + ry) * u, rw * u, rh * u); }
@@ -116,7 +104,6 @@ window.MODEL_THUMBS.satellite = function (x, W, H) {
     x.beginPath(); x.moveTo(cx + 12 * u, (cy - 11 + i * 7) * u); x.lineTo(cx + 24 * u, (cy - 21 + i * 7) * u); x.stroke();
     x.beginPath(); x.moveTo(cx - 12 * u, (cy - 11 + i * 7) * u); x.lineTo(cx - 24 * u, (cy - 21 + i * 7) * u); x.stroke();
   }
-  // solar arrays
   [-1, 1].forEach(function (s) {
     var x0 = s > 0 ? 15 : -45;
     rect('#1d3f8a', x0, -14, 30, 24);
@@ -127,7 +114,6 @@ window.MODEL_THUMBS.satellite = function (x, W, H) {
   rect('#d9a83a', -13, -15, 26, 28);
   rect('#2b3340', -9, -9, 18, 16);
   rect('#6fbf7f', 5, -6, 2, 2);
-  // dish
   x.fillStyle = '#f2f4f8'; x.beginPath(); x.ellipse(cx, (cy - 24) * u, 9 * u, 4 * u, 0, 0, 6.3); x.fill();
   rect('#7d8794', -.8, -22, 1.6, 7);
 };
